@@ -113,6 +113,7 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
                 String invoiceBuyerZip = request.getPayload().getParsed().getZip();
                 String invoiceBuyerCountry = request.getPayload().getParsed().getCountry();
                 String invoiceEstimatedDeliveryDate = request.getPayload().getParsed().getEstimated_delivery_date();
+                String invoiceAproximateShippingSpeed = request.getPayload().getParsed().getApproximate_shipping_speed();
                 String invoiceStoreName = "Aamstar Bookshop / Hooked On Books";
                 String invoiceStoreStreet = "12 East Bijou";
                 String invoiceStoreCity = "Colorado Springs";
@@ -142,7 +143,7 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
                         .replace("%%STATE%%", invoiceBuyerState)
                         .replace("%%ZIP%%", invoiceBuyerZip)
                         .replace("%%COUNTRY%%", invoiceBuyerCountry)
-                        .replace("%%ESTIMATED_DELIVERY%%", invoiceEstimatedDeliveryDate)
+                        .replace("%%ESTIMATED_DELIVERY%%", invoiceAproximateShippingSpeed)
                         .replace("%%SNAME%%", invoiceStoreName)
                         .replace("%%SSTREET%%", invoiceStoreStreet)
                         .replace("%%SCITY%%", invoiceStoreCity)
