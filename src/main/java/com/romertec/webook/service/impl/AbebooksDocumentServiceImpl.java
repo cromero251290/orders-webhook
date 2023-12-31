@@ -42,17 +42,17 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
         InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("invoice-template.html");
         File inputInvoiceTemplate = new File("invoice-template.html");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream,inputInvoiceTemplate);
-        String email = WebhookUtils.extractEmailAddress(request.get_to_());
+        String email = request.getPayload().getParsed().getEmail();
         FTPClient ftpClient = new FTPClient();
         ftpClient.connect(WebhookUtils.FTP_HOST, WebhookUtils.FTP_PORT);
         ftpClient.login(WebhookUtils.FTP_USERNAME, WebhookUtils.FTP_PASSWORD);
         ftpClient.enterLocalPassiveMode();
         if (ftpClient.isConnected()) {
-            if (request.get_original_recipient_().equalsIgnoreCase("cromeroordersabebooks.35796@in.airparser.com")) {
+            if (request.getPayload().getParsed().get_original_recipient_().equalsIgnoreCase("cromeroordersabebooks.35796@in.airparser.com")) {
                 String rootDir = "cromero";
                 String abebooksDir = "abebooks";
                 String emailDir = email;
-                String purchaseOrderDir = request.getAbebooks_purchase_order_no();
+                String purchaseOrderDir = request.getPayload().getParsed().getAbebooks_purchase_order_no();
                 boolean rootDirExist = ftpClient.changeWorkingDirectory(rootDir);
                 if (!rootDirExist) ftpClient.makeDirectory(rootDir);
                 ftpClient.changeWorkingDirectory(rootDir);
@@ -71,9 +71,9 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
 
                 File tempFile = new File("order.txt");
                 List<String> values = new ArrayList<>();
-                values.add("orderNumber: " + request.getAbebooks_purchase_order_no());
-                values.add("orderTotal: " + request.getOrder_total());
-                values.add("orderShipping: " + request.getShipping_price());
+                values.add("orderNumber: " + request.getPayload().getParsed().getAbebooks_purchase_order_no());
+                values.add("orderTotal: " + request.getPayload().getParsed().getOrder_total());
+                values.add("orderShipping: " + request.getPayload().getParsed().getShipping_price());
                 values.add("email: " + email);
                 Files.write(Path.of(tempFile.getPath()), values, StandardCharsets.UTF_8);
                 InputStream inputStream = new FileInputStream(tempFile);
@@ -91,41 +91,41 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
                 invoiceDoc.outputSettings().prettyPrint(false);
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-                LocalDate orderDate = LocalDate.parse(request.getOrder_date(), formatter);
+                LocalDate orderDate = LocalDate.parse(request.getPayload().getParsed().getOrder_date(), formatter);
 
                 Month month = orderDate.getMonth();
-                String invoiceName = request.getName();
+                String invoiceName = request.getPayload().getParsed().getName();
 
                 String invoiceCreateMonth = month.getDisplayName(TextStyle.FULL, Locale.US);
                 String invoiceCreateDay = String.valueOf(orderDate.getDayOfMonth());
                 String invoiceCreateYear = String.valueOf(orderDate.getYear());
 
-                String orderNumber = String.valueOf(request.getAbebooks_purchase_order_no());
+                String orderNumber = String.valueOf(request.getPayload().getParsed().getAbebooks_purchase_order_no());
                 LocalDateTime currentDate = LocalDateTime.now();
                 Month currentMonth = currentDate.getMonth();
                 String invoiceProcessedMonth = currentMonth.getDisplayName(TextStyle.FULL, Locale.US);
                 String invoiceProcessedDay = String.valueOf(currentDate.getDayOfMonth());
                 String invoiceProcessedYear = String.valueOf(currentDate.getYear());
-                String invoiceTotal = String.valueOf(request.getOrder_total());
-                String invoiceBuyerStreet = request.getStreet();
-                String invoiceBuyerCity = request.getCity();
-                String invoiceBuyerState = request.getState();
-                String invoiceBuyerZip = request.getZip();
-                String invoiceBuyerCountry = request.getCountry();
-                String invoiceEstimatedDeliveryDate = request.getEstimated_delivery_date();
+                String invoiceTotal = String.valueOf(request.getPayload().getParsed().getOrder_total());
+                String invoiceBuyerStreet = request.getPayload().getParsed().getStreet();
+                String invoiceBuyerCity = request.getPayload().getParsed().getCity();
+                String invoiceBuyerState = request.getPayload().getParsed().getState();
+                String invoiceBuyerZip = request.getPayload().getParsed().getZip();
+                String invoiceBuyerCountry = request.getPayload().getParsed().getCountry();
+                String invoiceEstimatedDeliveryDate = request.getPayload().getParsed().getEstimated_delivery_date();
                 String invoiceStoreName = "Aamstar Bookshop / Hooked On Books";
                 String invoiceStoreStreet = "12 East Bijou";
                 String invoiceStoreCity = "Colorado Springs";
                 String invoiceStoreState = "CO";
                 String invoiceStoreZip = "80903";
                 String invoiceStoreCountry = "U.S.A.";
-                String invoiceTitle = request.getTitle();
-                String invoiceAuthor = request.getAuthor();
-                String invoiceISBN = request.getIsbn();
-                String invoiceDescription = request.getBook_description();
-                String invoiceItemPrice = request.getBook_price();
-                String invoiceSubTotal = request.getOrder_total();
-                String invoiceShipping = request.getShipping_price();
+                String invoiceTitle = request.getPayload().getParsed().getTitle();
+                String invoiceAuthor = request.getPayload().getParsed().getAuthor();
+                String invoiceISBN = request.getPayload().getParsed().getIsbn();
+                String invoiceDescription = request.getPayload().getParsed().getBook_description();
+                String invoiceItemPrice = request.getPayload().getParsed().getBook_price();
+                String invoiceSubTotal = request.getPayload().getParsed().getOrder_total();
+                String invoiceShipping = request.getPayload().getParsed().getShipping_price();
 
                 String invoiceFormattedHtml = invoiceDoc.toString()
                         .replace("%%HDATE%%", formattedDate)
