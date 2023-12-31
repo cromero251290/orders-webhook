@@ -4,24 +4,33 @@ public class AbebooksRequest {
 
     public String abebooks_purchase_order_no;
     public String approximate_shipping_speed;
+    public String approximate_shipping_speed_max_number;
+    public String approximate_shipping_speed_min_number;
     public String author;
     public String binding;
     public String book_condition;
     public String book_description;
     public String book_price;
     public String bookseller;
-    public String email;
+    public String city;
+    public String country;
     public String estimated_delivery_date;
     public String isbn;
+    public String name;
     public String order_date;
     public String order_total;
     public String purchase_method;
     public String quantity;
     public String sales_order_no;
-    public String shipping_address;
     public String shipping_price;
+    public String state;
+    public String street;
     public String title;
-    public String total_book_price;
+    public String zip;
+    public String _original_recipient_;
+    public String _to_;
+
+
 
     public String getAbebooks_purchase_order_no() {
         return abebooks_purchase_order_no;
@@ -87,12 +96,36 @@ public class AbebooksRequest {
         this.bookseller = bookseller;
     }
 
-    public String getEmail() {
-        return email;
+    public String getApproximate_shipping_speed_max_number() {
+        return approximate_shipping_speed_max_number;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setApproximate_shipping_speed_max_number(String approximate_shipping_speed_max_number) {
+        this.approximate_shipping_speed_max_number = approximate_shipping_speed_max_number;
+    }
+
+    public String getApproximate_shipping_speed_min_number() {
+        return approximate_shipping_speed_min_number;
+    }
+
+    public void setApproximate_shipping_speed_min_number(String approximate_shipping_speed_min_number) {
+        this.approximate_shipping_speed_min_number = approximate_shipping_speed_min_number;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getEstimated_delivery_date() {
@@ -109,6 +142,14 @@ public class AbebooksRequest {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getOrder_date() {
@@ -151,20 +192,28 @@ public class AbebooksRequest {
         this.sales_order_no = sales_order_no;
     }
 
-    public String getShipping_address() {
-        return shipping_address;
-    }
-
-    public void setShipping_address(String shipping_address) {
-        this.shipping_address = shipping_address;
-    }
-
     public String getShipping_price() {
         return shipping_price;
     }
 
     public void setShipping_price(String shipping_price) {
         this.shipping_price = shipping_price;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getTitle() {
@@ -175,13 +224,27 @@ public class AbebooksRequest {
         this.title = title;
     }
 
-    public String getTotal_book_price() {
-        return total_book_price;
+    public String getZip() {
+        return zip;
     }
 
-    public void setTotal_book_price(String total_book_price) {
-        this.total_book_price = total_book_price;
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
+    public String get_original_recipient_() {
+        return _original_recipient_;
+    }
 
+    public void set_original_recipient_(String _original_recipient_) {
+        this._original_recipient_ = _original_recipient_;
+    }
+
+    public String get_to_() {
+        return _to_;
+    }
+
+    public void set_to_(String _to_) {
+        this._to_ = _to_;
+    }
 }
