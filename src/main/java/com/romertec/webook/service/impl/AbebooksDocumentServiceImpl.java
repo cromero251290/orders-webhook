@@ -39,9 +39,10 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
 
 
     public void generateInvoice(AbebooksRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
+        InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("invoice-template.html");
+        File inputInvoiceTemplate = new File("invoice-template.html");
+        WebhookUtils.convertInputStreamToFile(invoiceInputStream,inputInvoiceTemplate);
         String email = WebhookUtils.extractEmailAddress(request.get_to_());
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        File inputInvoiceTemplate = new File(classloader.getResource("invoice-template.html").getFile());
         FTPClient ftpClient = new FTPClient();
         ftpClient.connect(WebhookUtils.FTP_HOST, WebhookUtils.FTP_PORT);
         ftpClient.login(WebhookUtils.FTP_USERNAME, WebhookUtils.FTP_PASSWORD);
