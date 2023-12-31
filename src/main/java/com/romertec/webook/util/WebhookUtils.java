@@ -1,5 +1,6 @@
 package com.romertec.webook.util;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +25,19 @@ public class WebhookUtils {
             return emailMatcher.group(1);
         } else {
             return to;
+        }
+    }
+
+    public static void convertInputStreamToFile(InputStream inputStream, File file) {
+        try (OutputStream outputStream = new FileOutputStream(file)) {
+            int read;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
