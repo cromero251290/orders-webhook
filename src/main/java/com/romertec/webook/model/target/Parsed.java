@@ -21,6 +21,8 @@ public class Parsed {
     private String total;
     private String zip;
 
+    private String delivers_to_name;
+
     private String email;
 
     private String _original_recipient_;
@@ -132,6 +134,14 @@ public class Parsed {
 
     public String getStreet() {
         return street;
+    }
+
+    public String getDelivers_to_name() {
+        return delivers_to_name;
+    }
+
+    public void setDelivers_to_name(String delivers_to_name) {
+        this.delivers_to_name = delivers_to_name;
     }
 
     public void setStreet(String street) {

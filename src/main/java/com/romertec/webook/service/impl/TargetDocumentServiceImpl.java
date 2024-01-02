@@ -73,7 +73,7 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
         URL url = new URL(itemImageUrl);
         String base64 = WebhookUtils.getByteArrayFromImageURL(url);
         if (ftpClient.isConnected()) {
-            if (request.getPayload().getParsed().get_original_recipient_().equalsIgnoreCase("cromeroordersabebooks.35796@in.airparser.com")) {
+            if (request.getPayload().getParsed().get_original_recipient_().equalsIgnoreCase("cromeroorderstarget.93305@in.airparser.com")) {
                 String rootDir = "cromero";
                 String targetDir = "target";
                 String emailDir = request.getPayload().getParsed().getEmail();
@@ -96,10 +96,8 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
 
                 File tempFile = new File("order.txt");
                 List<String> values = new ArrayList<>();
-                String itemPriceFormatted = "0.0";
-                if (request.getPayload().getParsed().getItem_price().contains("$")) {
-                    itemPriceFormatted = request.getPayload().getParsed().getItem_price().replaceAll("\\$", "");
-                }
+                String itemPriceFormatted = request.getPayload().getParsed().getItem_price().replaceAll("[^\\d.]", "");
+
                 double subtotal = Double.valueOf(itemPriceFormatted);
 
                 Random shippingRandom = new Random();
@@ -133,7 +131,7 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
 
 
                 String invoiceFormattedHtml = invoiceDoc.toString()
-                        .replace("%%NAME%%", request.getPayload().getParsed().getName())
+                        .replace("%%NAME%%", request.getPayload().getParsed().getDelivers_to_name())
                         .replace("%%STREET%%", request.getPayload().getParsed().getStreet())
                         .replace("%%CITY%%", request.getPayload().getParsed().getCity())
                         .replace("%%STATE%%", request.getPayload().getParsed().getState())
@@ -142,7 +140,7 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
                         .replace("%%ORDER_DATE%%", request.getPayload().getParsed().getOrder_date())
                         .replace("%%TIN%%", tin)
                         .replace("%%ITEM_DESCRIPTION%%", request.getPayload().getParsed().getItem_description())
-                        .replace("%%ITEM_PRICE%%", request.getPayload().getParsed().getItem_price())
+                        .replace("%%ITEM_PRICE%%", itemPriceFormatted)
                         .replace("%%SUBTOTAL%%", String.valueOf(subtotal))
                         .replace("%%SHIPPING%%", formattedShipping)
                         .replace("%%SHIPPING_TAX%%", "0.00")
