@@ -118,7 +118,7 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
 
 
                 values.add("orderNumber: " + request.getPayload().getParsed().getOrder_number());
-                values.add("orderTotal: " + request.getPayload().getParsed().getOrder_total());
+                values.add("orderTotal: " + formattedTotal);
                 values.add("orderShipping: " + shipping);
                 values.add("email: " + request.getPayload().getParsed().getEmail());
                 Files.write(Path.of(tempFile.getPath()), values, StandardCharsets.UTF_8);
