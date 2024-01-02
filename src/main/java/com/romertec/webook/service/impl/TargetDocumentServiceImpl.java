@@ -183,11 +183,11 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
                         }
                     }
                 }
-//                inputStream.close();
-//                invoiceHtmlInputStream.close();
-//                invoiceInputStream.close();
-//                inputInvoiceTemplate.delete();
-//                tempFile.delete();
+                inputStream.close();
+                invoiceHtmlInputStream.close();
+                invoiceInputStream.close();
+                inputInvoiceTemplate.delete();
+                tempFile.delete();
                 ftpClient.logout();
                 ftpClient.disconnect();
             }
