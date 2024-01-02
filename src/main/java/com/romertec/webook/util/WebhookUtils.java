@@ -1,6 +1,9 @@
 package com.romertec.webook.util;
 
+import java.util.Base64;
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +29,23 @@ public class WebhookUtils {
         } else {
             return to;
         }
+    }
+
+    public static String getByteArrayFromImageURL(URL url) {
+        try {
+            URLConnection ucon = url.openConnection();
+            InputStream is = ucon.getInputStream();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int read = 0;
+            while ((read = is.read(buffer, 0, buffer.length)) != -1) {
+                baos.write(buffer, 0, read);
+            }
+            baos.flush();
+            return Base64.getEncoder().encodeToString(baos.toByteArray());
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public static void convertInputStreamToFile(InputStream inputStream, File file) {

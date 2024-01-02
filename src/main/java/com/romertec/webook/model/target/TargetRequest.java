@@ -1,7 +1,6 @@
-package com.romertec.webook.model;
+package com.romertec.webook.model.target;
 
-public class AbebooksRequest {
-
+public class TargetRequest {
     private String inbox_id;
     private String doc_id;
     private String event;

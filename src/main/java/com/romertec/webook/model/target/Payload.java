@@ -1,7 +1,6 @@
-package com.romertec.webook.model;
+package com.romertec.webook.model.target;
 
 public class Payload {
-
     private String filename;
     private Parsed parsed;
 

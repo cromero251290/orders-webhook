@@ -10,7 +10,7 @@ import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
 import com.romertec.webook.controller.WebhookController;
-import com.romertec.webook.model.AbebooksRequest;
+import com.romertec.webook.model.abebooks.AbebooksRequest;
 import com.romertec.webook.service.AbebooksDocumentService;
 import com.romertec.webook.util.WebhookUtils;
 import org.apache.commons.net.ftp.FTP;

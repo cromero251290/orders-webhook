@@ -1,7 +1,7 @@
 package com.romertec.webook.controller;
 
 
-import com.romertec.webook.model.AbebooksRequest;
+import com.romertec.webook.model.abebooks.AbebooksRequest;
 import com.romertec.webook.service.AbebooksDocumentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

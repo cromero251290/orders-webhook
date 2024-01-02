@@ -1,4 +1,4 @@
-package com.romertec.webook.model;
+package com.romertec.webook.model.abebooks;
 
 public class Parsed {
     private String abebooks_purchase_order_no;
