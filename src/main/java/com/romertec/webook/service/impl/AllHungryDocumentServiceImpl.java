@@ -89,7 +89,7 @@ public class AllHungryDocumentServiceImpl implements AllhungryDocumentService {
 
             values.add("orderNumber: " + orderNumber);
             values.add("orderTotal: " + formattedTotal);
-            values.add("orderShipping: " + shipping);
+            values.add("orderShipping: " + formattedShipping);
             values.add("email: " + request.getEmail());
             Files.write(Path.of(tempFile.getPath()), values, StandardCharsets.UTF_8);
             InputStream inputStream = new FileInputStream(tempFile);
