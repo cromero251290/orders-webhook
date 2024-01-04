@@ -1,0 +1,188 @@
+[
+   {
+      "name":"Combo #1 Brkfst",
+      "price":"14.99",
+      "category":"BREAKFASTS",
+      "store":"Las Curras Latin Cuisine"
+   },
+   {
+      "name":"Combo #2 Brkfst",
+      "price":"13.99",
+      "category":"BREAKFASTS",
+      "store":"Las Curras Latin Cuisine"
+   },
+   {
+      "name":"Combo #3 Brkfst",
+      "price":"12.99",
+      "category":"BREAKFASTS",
+      "store":"Las Curras Latin Cuisine"
+   },
+   {
+      "name":"Fish Ceviche Pescado",
+      "price":"11.00",
+      "category":"CEVICHE DISHES",
+      "store":"Chasqui's Food"
+   },
+   {
+      "name":"Shrimp Ceviche Camarón",
+      "price":"15.00",
+      "category":"CEVICHE DISHES",
+      "store":"Chasqui's Food"
+   },
+   {
+      "name":"Mixed Ceviche Mixta",
+      "price":"13.99",
+      "category":"CEVICHE DISHES",
+      "store":"Chasqui's Food"
+   },
+   {
+      "name":"Tacos De Cebiche",
+      "price":"10.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Papa A La Huancaina",
+      "price":"9.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Pulpo Olivo",
+      "price":"16.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Conchitas A La Parmesana",
+      "price":"18.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"T L P De Langostinos",
+      "price":"13.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Torrejitas Cebicheras",
+      "price":"14.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Leche Carretillera",
+      "price":"9.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Leche Clasica",
+      "price":"9.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Tapas De Pulpo Al Olivo Y Espuma",
+      "price":"18.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Pulpo Camarones Y Calamares",
+      "price":"24.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Trilogia De Cebiches",
+      "price":"19.00",
+      "category":"APPETIZERS",
+      "store":"Manta Wynwood"
+   },
+   {
+      "name":"Falafel Sandwich",
+      "price":"11.95",
+      "category":"LUNCH - SANDWICHES",
+      "store":"Maroosh Mediterranean Restaurant"
+   },
+   {
+      "name":"Chicken Kabab Swch",
+      "price":"12.95",
+      "category":"LUNCH - SANDWICHES",
+      "store":"Maroosh Mediterranean Restaurant"
+   },
+   {
+      "name":"Kofta Swch",
+      "price":"12.95",
+      "category":"LUNCH - SANDWICHES",
+      "store":"Maroosh Mediterranean Restaurant"
+   },
+   {
+      "name":"Beef Kabab Swch",
+      "price":"17.95",
+      "category":"LUNCH - SANDWICHES",
+      "store":"Maroosh Mediterranean Restaurant"
+   },
+   {
+      "name":"Gyro Shawarma Swch",
+      "price":"12.95",
+      "category":"LUNCH - SANDWICHES",
+      "store":"Maroosh Mediterranean Restaurant"
+   },
+   {
+      "name":"Grilled Cheese Swch",
+      "price":"13.95",
+      "category":"LUNCH - SANDWICHES",
+      "store":"Maroosh Mediterranean Restaurant"
+   },
+   {
+      "name":"Beef Empanada",
+      "price":"8.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Shrimp Al Bodegon",
+      "price":"12.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Marinated Olives",
+      "price":"5.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Ceviche",
+      "price":"11.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Mushrooms & Garlic",
+      "price":"7.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Cod Croquettes",
+      "price":"6.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Cod Croquettes",
+      "price":"6.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   },
+   {
+      "name":"Galician Pulpo",
+      "price":"13.00",
+      "category":"TAPAS - SMALL PLATES",
+      "store":"Tapa n Tacos"
+   }
+]

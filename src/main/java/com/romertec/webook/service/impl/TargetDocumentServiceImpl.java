@@ -40,7 +40,6 @@ import java.util.regex.Pattern;
 public class TargetDocumentServiceImpl implements TargetDocumentService {
     @Override
     public void generateInvoice(TargetRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
-        //find the tin number from target resources urls
         List<String> urlResourceList = request.getPayload().getParsed().getResource_url();
         Random random = new Random();
         int eightDigitNumber = 10000000 + random.nextInt(90000000);
