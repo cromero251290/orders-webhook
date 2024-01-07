@@ -9,7 +9,7 @@ import com.cloudconvert.dto.response.TaskResponse;
 import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
-import com.romertec.webook.controller.WebhookController;
+import com.romertec.webook.controller.AbebooksController;
 import com.romertec.webook.model.bestbuy.BestbuyRequest;
 import com.romertec.webook.service.BestBuyDocumentService;
 import com.romertec.webook.util.WebhookUtils;
@@ -21,9 +21,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 
@@ -44,7 +40,7 @@ public class BestBuyDocumentServiceImpl implements BestBuyDocumentService {
     public void generateInvoice(BestbuyRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
         List<String> urlResourceList = request.getPayload().getParsed().getResource_url();
         String firstUrl = urlResourceList.get(0);
-        InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("bestbuy-order-invoice.html");
+        InputStream invoiceInputStream = AbebooksController.class.getClassLoader().getResourceAsStream("bestbuy-order-invoice.html");
         File inputInvoiceTemplate = new File("bestbuy-order-invoice");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream, inputInvoiceTemplate);
         FTPClient ftpClient = new FTPClient();

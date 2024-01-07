@@ -10,64 +10,48 @@ import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
 import com.romertec.webook.controller.AbebooksController;
-import com.romertec.webook.entities.MenuEntity;
-import com.romertec.webook.entities.RestaurantsEntity;
-import com.romertec.webook.model.uber.UberRequest;
-import com.romertec.webook.repository.MenuRepository;
-import com.romertec.webook.repository.RestaurantsRepository;
-import com.romertec.webook.service.UberDocumentService;
+import com.romertec.webook.model.csv.CSVRequest;
+import com.romertec.webook.service.CSVDocumentService;
 import com.romertec.webook.util.WebhookUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class UberDocumentServiceImpl implements UberDocumentService {
-
-    @Autowired
-    private MenuRepository menuRepository;
-    @Autowired
-    private RestaurantsRepository restaurantRepository;
-
+public class CSVDocumentServiceImpl implements CSVDocumentService {
     @Override
-    public void generateInvoice(UberRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
-        Optional<RestaurantsEntity> restaurantOptional = restaurantRepository.findRandomRestaurant();
-        RestaurantsEntity restaurant = restaurantOptional.get();
-        Optional<List<MenuEntity>> optionalMenuRepositoryList = menuRepository.findAllMenusByRestaurantId(restaurant.getId());
-        MenuEntity menu = optionalMenuRepositoryList.get().get(0);
-
-
-        InputStream invoiceInputStream = AbebooksController.class.getClassLoader().getResourceAsStream("uber-invoice-template.html");
-        File inputInvoiceTemplate = new File("uber-invoice-template");
+    public void generateInvoice(CSVRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
+        String itemImageUrl = request.getPayload().getParsed().getResource_url().get(0);
+        URL url = new URL(itemImageUrl);
+        String base64 = WebhookUtils.getByteArrayFromImageURL(url);
+        InputStream invoiceInputStream = AbebooksController.class.getClassLoader().getResourceAsStream("cvs-order-invoice.html");
+        File inputInvoiceTemplate = new File("cvs-order-invoice");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream, inputInvoiceTemplate);
         FTPClient ftpClient = new FTPClient();
         ftpClient.connect(WebhookUtils.FTP_HOST, WebhookUtils.FTP_PORT);
         ftpClient.login(WebhookUtils.FTP_USERNAME, WebhookUtils.FTP_PASSWORD);
         ftpClient.enterLocalPassiveMode();
         if (ftpClient.isConnected()) {
-            String rootDir = "cromero";
-            String targetDir = "uber";
-            String emailDir = request.getEmail();
-            Random rand = new Random();
-            int orderNumber = 150000000 + rand.nextInt(90000000);
-            String purchaseOrderDir = String.valueOf(orderNumber);
+            String[] receiptArr = request.getPayload().getParsed().get_original_recipient_().split("\\.");
+            String rootDir = receiptArr[0];
+            String targetDir = "cvs";
+            String emailDir = request.getPayload().getParsed().getEmail();
+            String purchaseOrderDir = request.getPayload().getParsed().getOrder_number();
             boolean rootDirExist = ftpClient.changeWorkingDirectory(rootDir);
             if (!rootDirExist) ftpClient.makeDirectory(rootDir);
             ftpClient.changeWorkingDirectory(rootDir);
@@ -84,73 +68,38 @@ public class UberDocumentServiceImpl implements UberDocumentService {
             if (!purchaseOrderDirExist) ftpClient.makeDirectory(purchaseOrderDir);
             ftpClient.changeWorkingDirectory(purchaseOrderDir);
 
-            Pattern usdPattern = Pattern.compile("\\s*USD\\s*");
-            Matcher matcher = usdPattern.matcher(menu.getPrice());
-            String itemPriceString = null;
-            if (matcher.find()) {
-                itemPriceString = matcher.replaceAll("");
-            } else {
-                itemPriceString = menu.getPrice();
-            }
-
-            String itemName = menu.getName();
-
             File tempFile = new File("order.txt");
             List<String> values = new ArrayList<>();
+            String itemPriceFormatted = request.getPayload().getParsed().getItem_price().replaceAll("[^\\d.]", "");
+
+            double subtotal = Double.valueOf(itemPriceFormatted);
 
             Random shippingRandom = new Random();
-            double randomDouble = 4.0 + (7.0 - 4.0) * shippingRandom.nextDouble();
-            double shipping = randomDouble;
-            double itemPrice = Double.valueOf(itemPriceString);
-            double subtotal = itemPrice;
+            double randomDouble = shippingRandom.nextDouble();
+            double scaledDouble = 10.00 + (randomDouble * (15.00 - 10.00));
+            double shipping = Math.round(scaledDouble * 100.0) / 100.0;
+            double itemPrice = Double.valueOf(itemPriceFormatted);
             double tax = (0.07) * (shipping + itemPrice);
+            int tdcDigits = ThreadLocalRandom.current().nextInt(1000, 10000); // 1000 a 9999
 
 
-            Random randomServiceFee = new Random();
-            double serviceFee = randomServiceFee.nextDouble();
-            serviceFee = 3.0 + serviceFee * (4.5 - 3.0);
-
-            Random randomTipFee = new Random();
-            int tip = randomTipFee.nextInt(5) + 1;
-
-
-            double total = itemPrice + tax + shipping + tip + serviceFee;
-
-            String name = request.getName();
-            String storeName = restaurant.getName();
-            String restaurantAddress = restaurant.getStreet() + ", " + restaurant.getCity() + ", " + restaurant.getState() + " " + restaurant.getZip();
-            String address = request.getStreet() + ", " + request.getCity() + ", " + request.getStateCode() + " " + request.getZip();
-
-
-            SimpleDateFormat formatterFreeshipping = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            String dateForFreeshipping = formatterFreeshipping.format(date);
-
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter bodyDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yy hh:mm a");
-            DateTimeFormatter headerDateFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-
-            String formattedBody = now.format(bodyDateFormatter);
-            String formattedHeader = now.format(headerDateFormatter);
-
-            // Imprime la fecha y hora formateadas
+            Random savingRandom = new Random();
+            double savings = 1.0 + (2.0 - 1.0) * savingRandom.nextDouble();
+            double total = (tax + itemPrice + shipping) - savings;
 
             DecimalFormat df = new DecimalFormat("#.00");
 
             String formattedShipping = df.format(shipping);
             String formattedTax = df.format(tax);
             String formattedTotal = df.format(total);
-            String formattedSubtotal = df.format(subtotal);
-            String formattedTip = df.format(tip);
-            String formattedServiceFee = df.format(serviceFee);
+            String formattedSubtotal = df.format(itemPrice);
+            String formattedSaving = df.format(savings);
 
-            values.add("Retailer: Uber Eats");
-            values.add("Order Date: " + dateForFreeshipping);
-            values.add("Service Fee: " + formattedServiceFee);
-            values.add("Delivery Fee: " + formattedShipping);
-            values.add("Order Total: " + formattedTotal);
-            values.add("Email: " + request.getEmail());
 
+            values.add("orderNumber: " + request.getPayload().getParsed().getOrder_number());
+            values.add("orderTotal: " + formattedTotal);
+            values.add("orderShipping: " + formattedShipping);
+            values.add("email: " + request.getPayload().getParsed().getEmail());
             Files.write(Path.of(tempFile.getPath()), values, StandardCharsets.UTF_8);
             InputStream inputStream = new FileInputStream(tempFile);
             boolean done = ftpClient.storeFile("invoice.txt", inputStream);
@@ -159,23 +108,25 @@ public class UberDocumentServiceImpl implements UberDocumentService {
 
             invoiceDoc.outputSettings().prettyPrint(false);
 
+
             String invoiceFormattedHtml = invoiceDoc.toString()
-                    .replace("%%BODY_DATE%%", formattedBody)
-                    .replace("%%HEADER_DATE%%", formattedHeader)
-                    .replace("%%NAME%%", name)
-                    .replace("%%STORE_NAME%%", storeName)
-                    .replace("%%TOTAL%%", formattedTotal)
-                    .replace("%%ITEM_PRICE%%", itemPriceString)
-                    .replace("%%ITEM_NAME%%", itemName)
+                    .replace("%%DELIVERY_DATE%%", request.getPayload().getParsed().getEstimated_delivery())
+                    .replace("%%ORDER%%", request.getPayload().getParsed().getOrder_number())
+                    .replace("%%STREET%%", request.getPayload().getParsed().getStreet())
+                    .replace("%%CITY%%", request.getPayload().getParsed().getCity())
+                    .replace("%%STATE_CODE%%", request.getPayload().getParsed().getState_code())
+                    .replace("%%ZIP%%", request.getPayload().getParsed().getZip())
+                    .replace("%%ITEM_NAME%%", request.getPayload().getParsed().getItem_description())
+                    .replace("%%ITEM_PRICE%%", request.getPayload().getParsed().getItem_price())
+                    .replace("%%SAVINGS%%", formattedSaving)
                     .replace("%%SUBTOTAL%%", formattedSubtotal)
-                    .replace("%%SERVICE%%", formattedServiceFee)
-                    .replace("%%TAX%%", formattedTax)
-                    .replace("%%TIP%%", formattedTip)
+                    .replace("%%NAME%%", request.getPayload().getParsed().getName())
                     .replace("%%SHIPPING%%", formattedShipping)
-                    .replace("%%SUBTOTAL%%", formattedSubtotal)
                     .replace("%%TAX%%", formattedTax)
-                    .replace("%%STORE_ADDRESS%%", restaurantAddress)
-                    .replace("%%ADDRESS%%", address);
+                    .replace("%%TOTAL%%", formattedTotal)
+                    .replace("%%ITEM_IMAGE%%", base64)
+                    .replace("%%LAST_DIGITS%%", String.valueOf(tdcDigits));
+
 
             InputStream invoiceHtmlInputStream = new ByteArrayInputStream(invoiceFormattedHtml.getBytes(StandardCharsets.UTF_8));
             CloudConvertClient cloudConvertClient = new CloudConvertClient(new StringSettingsProvider(WebhookUtils.CLOUD_CONVERT_API_KEY, "webhook-signing-secret", false));
@@ -183,7 +134,7 @@ public class UberDocumentServiceImpl implements UberDocumentService {
             if (uploadImportTaskResponseResult.getStatus().getCode() == (HttpStatus.SC_OK)) {
                 final TaskResponse uploadImportTaskResponse = uploadImportTaskResponseResult.getBody();
                 cloudConvertClient.tasks().wait(uploadImportTaskResponse.getId());
-                final ConvertFilesTaskRequest convertFilesTaskRequest = new ConvertFilesTaskRequest().setInput(uploadImportTaskResponse.getId()).setInputFormat("html").setOutputFormat("pdf").setProperty("pages", "1");
+                final ConvertFilesTaskRequest convertFilesTaskRequest = new ConvertFilesTaskRequest().setInput(uploadImportTaskResponse.getId()).setInputFormat("html").setOutputFormat("pdf");
                 final Result<TaskResponse> convertTaskResponseResult = cloudConvertClient.tasks().convert(convertFilesTaskRequest);
                 if (convertTaskResponseResult.getStatus().getCode() == (HttpStatus.SC_CREATED)) {
                     final TaskResponse convertTaskResponse = convertTaskResponseResult.getBody();

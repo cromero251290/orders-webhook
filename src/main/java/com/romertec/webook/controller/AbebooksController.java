@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "romertec/webhook")
-public class WebhookController {
+public class AbebooksController {
     @Autowired
     AbebooksDocumentService abebooksDocumentService;
 

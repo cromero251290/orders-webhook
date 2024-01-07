@@ -9,7 +9,7 @@ import com.cloudconvert.dto.response.TaskResponse;
 import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
-import com.romertec.webook.controller.WebhookController;
+import com.romertec.webook.controller.AbebooksController;
 import com.romertec.webook.model.target.TargetRequest;
 import com.romertec.webook.service.TargetDocumentService;
 import com.romertec.webook.util.WebhookUtils;
@@ -61,7 +61,7 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
         }
 
 
-        InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("target-order-invoice.html");
+        InputStream invoiceInputStream = AbebooksController.class.getClassLoader().getResourceAsStream("target-order-invoice.html");
         File inputInvoiceTemplate = new File("target-order-invoice");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream, inputInvoiceTemplate);
         FTPClient ftpClient = new FTPClient();

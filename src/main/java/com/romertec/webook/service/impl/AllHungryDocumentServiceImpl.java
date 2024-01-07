@@ -9,7 +9,7 @@ import com.cloudconvert.dto.response.TaskResponse;
 import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
-import com.romertec.webook.controller.WebhookController;
+import com.romertec.webook.controller.AbebooksController;
 import com.romertec.webook.entities.MenuEntity;
 import com.romertec.webook.entities.RestaurantsEntity;
 import com.romertec.webook.model.allhungry.AllHungryRequest;
@@ -35,7 +35,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +54,7 @@ public class AllHungryDocumentServiceImpl implements AllhungryDocumentService {
         MenuEntity menu = optionalMenuRepositoryList.get().get(0);
 
 
-        InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("allhungry-invoice-template.html");
+        InputStream invoiceInputStream = AbebooksController.class.getClassLoader().getResourceAsStream("allhungry-invoice-template.html");
         File inputInvoiceTemplate = new File("allhungry-invoice-template");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream, inputInvoiceTemplate);
         FTPClient ftpClient = new FTPClient();

@@ -9,7 +9,7 @@ import com.cloudconvert.dto.response.TaskResponse;
 import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
-import com.romertec.webook.controller.WebhookController;
+import com.romertec.webook.controller.AbebooksController;
 import com.romertec.webook.model.abebooks.AbebooksRequest;
 import com.romertec.webook.service.AbebooksDocumentService;
 import com.romertec.webook.util.WebhookUtils;
@@ -39,7 +39,7 @@ public class AbebooksDocumentServiceImpl implements AbebooksDocumentService {
 
 
     public void generateInvoice(AbebooksRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
-        InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("invoice-template.html");
+        InputStream invoiceInputStream = AbebooksController.class.getClassLoader().getResourceAsStream("invoice-template.html");
         File inputInvoiceTemplate = new File("invoice-template.html");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream,inputInvoiceTemplate);
         String email = request.getPayload().getParsed().getEmail();
