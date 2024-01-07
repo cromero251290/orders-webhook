@@ -49,20 +49,10 @@ public class CSVDocumentServiceImpl implements CSVDocumentService {
         if (ftpClient.isConnected()) {
             String[] receiptArr = request.getPayload().getParsed().get_original_recipient_().split("\\.");
             String rootDir = receiptArr[0];
-            String targetDir = "cvs";
-            String emailDir = request.getPayload().getParsed().getEmail();
             String purchaseOrderDir = request.getPayload().getParsed().getOrder_number();
             boolean rootDirExist = ftpClient.changeWorkingDirectory(rootDir);
             if (!rootDirExist) ftpClient.makeDirectory(rootDir);
             ftpClient.changeWorkingDirectory(rootDir);
-
-            boolean targetDirExist = ftpClient.changeWorkingDirectory(targetDir);
-            if (!targetDirExist) ftpClient.makeDirectory(targetDir);
-            ftpClient.changeWorkingDirectory(targetDir);
-
-            boolean emailDirExist = ftpClient.changeWorkingDirectory(emailDir);
-            if (!emailDirExist) ftpClient.makeDirectory(emailDir);
-            ftpClient.changeWorkingDirectory(emailDir);
 
             boolean purchaseOrderDirExist = ftpClient.changeWorkingDirectory(purchaseOrderDir);
             if (!purchaseOrderDirExist) ftpClient.makeDirectory(purchaseOrderDir);
