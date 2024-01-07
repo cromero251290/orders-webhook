@@ -10,7 +10,11 @@ import com.cloudconvert.dto.result.Result;
 import com.cloudconvert.exception.CloudConvertClientException;
 import com.cloudconvert.exception.CloudConvertServerException;
 import com.romertec.webook.controller.WebhookController;
+import com.romertec.webook.entities.MenuEntity;
+import com.romertec.webook.entities.RestaurantsEntity;
 import com.romertec.webook.model.allhungry.AllHungryRequest;
+import com.romertec.webook.repository.MenuRepository;
+import com.romertec.webook.repository.RestaurantsRepository;
 import com.romertec.webook.service.AllhungryDocumentService;
 import com.romertec.webook.util.WebhookUtils;
 import org.apache.commons.net.ftp.FTP;
@@ -18,6 +22,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -26,17 +31,30 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AllHungryDocumentServiceImpl implements AllhungryDocumentService {
+
+    @Autowired
+    private MenuRepository menuRepository;
+    @Autowired
+    private RestaurantsRepository restaurantRepository;
+
     @Override
     public void generateInvoice(AllHungryRequest request) throws IOException, CloudConvertServerException, CloudConvertClientException, URISyntaxException {
+        Optional<RestaurantsEntity> restaurantOptional = restaurantRepository.findRandomRestaurant();
+        RestaurantsEntity restaurant = restaurantOptional.get();
+        Optional<List<MenuEntity>> optionalMenuRepositoryList = menuRepository.findAllMenusByRestaurantId(restaurant.getId());
+        MenuEntity menu = optionalMenuRepositoryList.get().get(0);
+
+
         InputStream invoiceInputStream = WebhookController.class.getClassLoader().getResourceAsStream("allhungry-invoice-template.html");
         File inputInvoiceTemplate = new File("allhungry-invoice-template");
         WebhookUtils.convertInputStreamToFile(invoiceInputStream, inputInvoiceTemplate);
@@ -70,14 +88,27 @@ public class AllHungryDocumentServiceImpl implements AllhungryDocumentService {
             File tempFile = new File("order.txt");
             List<String> values = new ArrayList<>();
 
-            double subtotal = Double.valueOf(request.getOrder().getPrice());
+            Pattern usdPattern = Pattern.compile("\\s*USD\\s*");
+            Matcher matcher = usdPattern.matcher(menu.getPrice());
+            String itemPriceString = null;
+            if (matcher.find()) {
+                itemPriceString = matcher.replaceAll("");
+            } else {
+                itemPriceString = menu.getPrice();
+            }
+            String itemName = menu.getName();
+            String itemCategory = menu.getCategory();
+
+            double subtotal = Double.valueOf(itemPriceString);
             Random shippingRandom = new Random();
             double randomDouble = 4.0 + (7.0 - 4.0) * shippingRandom.nextDouble();
             double shipping = randomDouble;
-            double itemPrice = Double.valueOf(request.getOrder().getPrice());
+            double itemPrice = Double.valueOf(itemPriceString);
             double tax = (0.07) * (shipping + itemPrice);
             double total = tax + itemPrice + shipping;
-
+            SimpleDateFormat formatterFreeshipping = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = new Date();
+            String dateForFreeshipping = formatterFreeshipping.format(date);
 
             DecimalFormat df = new DecimalFormat("#.00");
 
@@ -87,10 +118,12 @@ public class AllHungryDocumentServiceImpl implements AllhungryDocumentService {
             String formattedSubtotal = df.format(subtotal);
             String formattedPrice = df.format(itemPrice);
 
-            values.add("orderNumber: " + orderNumber);
-            values.add("orderTotal: " + formattedTotal);
-            values.add("orderShipping: " + formattedShipping);
-            values.add("email: " + request.getEmail());
+            values.add("Retailer: Uber Eats");
+            values.add("Order Date: " + dateForFreeshipping);
+            values.add("Service Fee: 0");
+            values.add("Delivery Fee: " + formattedShipping);
+            values.add("Order Total: " + formattedTotal);
+            values.add("Email: " + request.getEmail());
             Files.write(Path.of(tempFile.getPath()), values, StandardCharsets.UTF_8);
             InputStream inputStream = new FileInputStream(tempFile);
             boolean done = ftpClient.storeFile("invoice.txt", inputStream);
@@ -111,10 +144,10 @@ public class AllHungryDocumentServiceImpl implements AllhungryDocumentService {
                     .replace("%%ZIP%%", request.getZip())
                     .replace("%%PHONE%%", request.getPhoneNumber())
                     .replace("%%ORDER%%", String.valueOf(orderNumber))
-                    .replace("%%STORE_NAME%%", request.getOrder().getStore())
-                    .replace("%%ITEM_CATEGORY%%", request.getOrder().getCategory())
-                    .replace("%%ITEM_DESCRIPTION%%", request.getOrder().getName())
-                    .replace("%%ITEM_PRICE%%", request.getOrder().getPrice())
+                    .replace("%%STORE_NAME%%", restaurant.getName())
+                    .replace("%%ITEM_CATEGORY%%", itemCategory)
+                    .replace("%%ITEM_DESCRIPTION%%", itemName)
+                    .replace("%%ITEM_PRICE%%", formattedPrice)
                     .replace("%%SUBTOTAL%%", formattedSubtotal)
                     .replace("%%TAX%%", formattedTax)
                     .replace("%%SHIPPING%%", formattedShipping)
