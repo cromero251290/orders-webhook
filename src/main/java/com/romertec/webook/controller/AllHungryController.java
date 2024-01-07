@@ -28,13 +28,6 @@ public class AllHungryController {
 
     @RequestMapping(value = "/allhungry/invoice/generate", method = RequestMethod.POST)
     public ResponseEntity<Object> upload(@Valid @RequestBody AllHungryRequest request) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        List<AllHungryOrder> ordersTemplate = mapper.readValue(new File("src/main/resources/data/allhungry/data.json"),
-                new TypeReference<List<AllHungryOrder>>() {});
-        Random rand = new Random();
-        int randomIndex = rand.nextInt(ordersTemplate.size());
-        AllHungryOrder order = ordersTemplate.get(randomIndex);
-        request.setOrder(order);
         allhungryDocumentService.generateInvoice(request);
         return ResponseEntity.ok().body("Success");
     }
