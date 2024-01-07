@@ -80,10 +80,6 @@ public class TargetDocumentServiceImpl implements TargetDocumentService {
             if (!rootDirExist) ftpClient.makeDirectory(rootDir);
             ftpClient.changeWorkingDirectory(rootDir);
 
-            boolean emailDirExist = ftpClient.changeWorkingDirectory(emailDir);
-            if (!emailDirExist) ftpClient.makeDirectory(emailDir);
-            ftpClient.changeWorkingDirectory(emailDir);
-
             boolean purchaseOrderDirExist = ftpClient.changeWorkingDirectory(purchaseOrderDir);
             if (!purchaseOrderDirExist) ftpClient.makeDirectory(purchaseOrderDir);
             ftpClient.changeWorkingDirectory(purchaseOrderDir);

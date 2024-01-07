@@ -48,21 +48,15 @@ public class BestBuyDocumentServiceImpl implements BestBuyDocumentService {
         ftpClient.login(WebhookUtils.FTP_USERNAME, WebhookUtils.FTP_PASSWORD);
         ftpClient.enterLocalPassiveMode();
         if (ftpClient.isConnected()) {
-            String rootDir = "cromero";
-            String targetDir = "bestbuy";
-            String emailDir = request.getPayload().getParsed().get_to_();
+
+            String[] receiptArr = request.getPayload().getParsed().get_original_recipient_().split("\\.");
+            String rootDir = receiptArr[0];
+
             String purchaseOrderDir = request.getPayload().getParsed().getOrder_number();
             boolean rootDirExist = ftpClient.changeWorkingDirectory(rootDir);
             if (!rootDirExist) ftpClient.makeDirectory(rootDir);
             ftpClient.changeWorkingDirectory(rootDir);
 
-            boolean targetDirExist = ftpClient.changeWorkingDirectory(targetDir);
-            if (!targetDirExist) ftpClient.makeDirectory(targetDir);
-            ftpClient.changeWorkingDirectory(targetDir);
-
-            boolean emailDirExist = ftpClient.changeWorkingDirectory(emailDir);
-            if (!emailDirExist) ftpClient.makeDirectory(emailDir);
-            ftpClient.changeWorkingDirectory(emailDir);
 
             boolean purchaseOrderDirExist = ftpClient.changeWorkingDirectory(purchaseOrderDir);
             if (!purchaseOrderDirExist) ftpClient.makeDirectory(purchaseOrderDir);
