@@ -104,7 +104,7 @@ public class WalmartDocumentServiceImpl implements WalmartDocumentService {
             if (uploadImportTaskResponseResult.getStatus().getCode() == (HttpStatus.SC_OK)) {
                 final TaskResponse uploadImportTaskResponse = uploadImportTaskResponseResult.getBody();
                 cloudConvertClient.tasks().wait(uploadImportTaskResponse.getId());
-                final ConvertFilesTaskRequest convertFilesTaskRequest = new ConvertFilesTaskRequest().setInput(uploadImportTaskResponse.getId()).setInputFormat("html").setOutputFormat("pdf").setProperty("page_width","29.7");
+                final ConvertFilesTaskRequest convertFilesTaskRequest = new ConvertFilesTaskRequest().setInput(uploadImportTaskResponse.getId()).setInputFormat("html").setOutputFormat("pdf").setProperty("page_width","29.7").setProperty("pages", "1");;
                 final Result<TaskResponse> convertTaskResponseResult = cloudConvertClient.tasks().convert(convertFilesTaskRequest);
                 if (convertTaskResponseResult.getStatus().getCode() == (HttpStatus.SC_CREATED)) {
                     final TaskResponse convertTaskResponse = convertTaskResponseResult.getBody();
