@@ -58,7 +58,7 @@ public class WalmartDocumentServiceImpl implements WalmartDocumentService {
 
             File tempFile = new File("order.txt");
             List<String> values = new ArrayList<>();
-            String itemPriceOnlyNumber = request.getPayload().getParsed().getProduct_price().replace("$", "");
+            String itemPriceOnlyNumber = request.getPayload().getParsed().getTemporary_hold_ammount().replace("$", "");
             Random randomTipFee = new Random();
 
             int tip = randomTipFee.nextInt(5) + 1;
@@ -73,7 +73,7 @@ public class WalmartDocumentServiceImpl implements WalmartDocumentService {
             String formattedTip = df.format(tip);
 
 
-            String description = request.getPayload().getParsed().getProduct_description();
+            String description = request.getPayload().getParsed().getItem_canceled_description();
             String result = description.replace("Qty: 1", "");
 
 
@@ -90,7 +90,7 @@ public class WalmartDocumentServiceImpl implements WalmartDocumentService {
 
             String invoiceFormattedHtml = invoiceDoc.toString()
                     .replace("%%ORDER_DATE%%", request.getPayload().getParsed().getOrder_date())
-                    .replace("%%ITEM_PRICE%%", request.getPayload().getParsed().getProduct_price())
+                    .replace("%%ITEM_PRICE%%", request.getPayload().getParsed().getTemporary_hold_ammount())
                     .replace("%%ITEM_DESCRIPTION%%", result)
                     .replace("%%ORDER%%",request.getPayload().getParsed().getOrder_number())
                     .replace("%%TIP%%", formattedTip)

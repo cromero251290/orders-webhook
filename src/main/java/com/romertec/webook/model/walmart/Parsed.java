@@ -5,8 +5,8 @@ public class Parsed {
     private String name;
     private String order_date;
     private String order_number;
-    private String product_description;
-    private String product_price;
+    private String item_canceled_description;
+    private String temporary_hold_ammount;
     private String _original_recipient_;
 
     public String getName() {
@@ -33,20 +33,20 @@ public class Parsed {
         this.order_number = order_number;
     }
 
-    public String getProduct_description() {
-        return product_description;
+    public String getItem_canceled_description() {
+        return item_canceled_description;
     }
 
-    public void setProduct_description(String product_description) {
-        this.product_description = product_description;
+    public void setItem_canceled_description(String item_canceled_description) {
+        this.item_canceled_description = item_canceled_description;
     }
 
-    public String getProduct_price() {
-        return product_price;
+    public String getTemporary_hold_ammount() {
+        return temporary_hold_ammount;
     }
 
-    public void setProduct_price(String product_price) {
-        this.product_price = product_price;
+    public void setTemporary_hold_ammount(String temporary_hold_ammount) {
+        this.temporary_hold_ammount = temporary_hold_ammount;
     }
 
     public String get_original_recipient_() {
