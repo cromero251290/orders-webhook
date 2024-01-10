@@ -11,6 +11,21 @@
  * Copyright 2012,2013 Lu Wang <coolwanglu@gmail.com>
  * https://github.com/pdf2htmlEX/pdf2htmlEX/blob/master/share/LICENSE
  */
+
+
+        .description-class{
+            position: relative;
+            height: 62px;
+            width: 490px;
+            top: 535px;
+            left: 30px;
+            font-size: 17px;
+            font-family: f1;
+            font-weight: bold;
+            word-wrap: break-word;
+            color: rgb(51, 51, 51);
+
+        }
         #sidebar {
             position: absolute;
             top: 0;
@@ -1424,9 +1439,13 @@
                 <div style="font-weight: bold;" class="t m0 x1 h4 y8  fs1 fc0 sc0 ls0 ws0">Inv<span class="_ _0"></span>oice number<span
                         >: %%ORDER%%</span></div>
                 <div class="t m0 x2 h5 y9 ff2 fs1 fc0 sc0 ls0 ws0">Item</div>
-                <div style="font-weight: bold;font-size: 30.00px;" class="t m0 x2 h4 ya  fc0 sc0 ls0 ws0">%%TIN%% - %%ITEM_DESCRIPTION%%
+                <div class="description-class" >
+
+                    <div style=" margin: 8px">
+                        %%TIN%% - %%ITEM_DESCRIPTION%%
+                    </div>
+
                 </div>
-                <div class="t m0 x2 h4 yb ff1 fs1 fc0 sc0 ls0 ws0">Essentials<span class="_ _0"></span></div>
                 <div class="t m0 x3 h5 y9 ff2 fs1 fc0 sc0 ls0 ws0">Qty<span class="_ _1"></span>.</div>
                 <div class="t m0 x4 h4 ya ff1 fs1 fc0 sc0 ls0 ws0">1</div>
                 <div class="t m0 x5 h5 y9 ff2 fs1 fc0 sc0 ls0 ws0">Unit price</div>
